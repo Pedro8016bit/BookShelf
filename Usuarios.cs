@@ -178,5 +178,35 @@ namespace BookShelf
             Regex regex = new Regex(emailValido);
             return regex.IsMatch(email);
         }
+
+        public bool Verificar_se_User_existe()
+        {
+            try
+            {
+                using (MySqlConnection conexaoBanco = new BancoDb().Conectar())
+                {
+                    string senhacripto = CriptografarSenha(Senha);
+                    string query = "SELECT COUNT(*) FROM usuarios";
+
+                    MySqlCommand comando = new MySqlCommand(query, conexaoBanco);
+
+                    int resultado = Convert.ToInt32(comando.ExecuteScalar());
+
+                    if (resultado > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("erro no catch logar" + ex.Message);
+                return false;
+            }
+        }
     }
 }
